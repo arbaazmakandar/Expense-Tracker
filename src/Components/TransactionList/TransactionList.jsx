@@ -21,7 +21,7 @@ const TransactionList = ({
 
   const handleDelete = (id) => {
     const item = expenseList.find((i) => i.id === id);
-    setBalance((prev) => prev + item.price);
+    setBalance((prev) => Number(prev) + Number(item.price));
     setExpenseList((prev) => prev.filter((item) => item.id !== id));
   };
   const handleEdit = (id) => {
@@ -38,8 +38,16 @@ const TransactionList = ({
     setTotalPages(Math.ceil(expenseList.length / maxRecords));
   }, [currentPage, expenseList]);
 
+  // If all transactions on current page are deleted then go to prev page.
+  // If no prev then do nothing, display blank page (which happens by default)
+  useEffect(() => {
+    if (totalPages < currentPage && currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  }, [totalPages, currentPage]);
+
   return (
-    <div style={styles.transactionsWrapper}>
+    <div className={styles.transactionsWrapper}>
       {title && <h2>{title}</h2>}
       {expenseList.length > 0 ? (
         <div className={styles.list}>

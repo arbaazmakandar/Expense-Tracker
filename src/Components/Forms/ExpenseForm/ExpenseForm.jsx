@@ -2,6 +2,7 @@ import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import Button from "../../Button/Button";
+import styles from "./ExpenseForm.module.css";
 const ExpenseForm = ({
   setIsOpen,
   expenseList,
@@ -16,7 +17,8 @@ const ExpenseForm = ({
     price: "",
     date: "",
   });
-
+  //Edit Id will be there when open from Recent Transactions, else it will not be there
+  console.log(editId);
   const { enqueueSnackbar } = useSnackbar();
 
   const handleChange = (e) => {
@@ -33,7 +35,7 @@ const ExpenseForm = ({
       setIsOpen(false);
       return;
     } else {
-      setBalance((prev) => prev - Number(formData.price));
+      setBalance((prev) => Number(prev) - Number(formData.price));
 
       const lastId = expenseList.length > 0 ? expenseList[0].id : 0;
       setExpenseList((prev) => [{ ...formData, id: lastId + 1 }, ...prev]);
@@ -43,9 +45,37 @@ const ExpenseForm = ({
         price: "",
         date: "",
       });
+      setIsOpen(false);
     }
   };
-  const handleEdit = (e) => {};
+  const handleEdit = (e) => {
+    e.preventDefault();
+    const updatedElementList = expenseList.map((item) => {
+      if (item.id === editId) {
+        //we check the difference between the old price set and newly entered price of the item
+        const difference = Number(item.price) - Number(formData.price);
+        //if price entered is more then we check if balance is suffice of that price
+        if (difference < 0 && Math.abs(difference) > balance) {
+          enqueueSnackbar("Price should not exceed the balance", {
+            variant: "warning",
+          });
+          setIsOpen(false);
+          return { ...item }; //we return the item as it is.
+        } else {
+          //else (means the price entered is less than already price OR wallet balance is suffice of the price)
+          //we decrease the balance and set the new price of item
+          setBalance((prev) => Number(prev) + Number(difference));
+
+          setIsOpen(false);
+          return { ...formData, id: editId };
+        }
+      } else {
+        setIsOpen(false);
+        return { ...item };
+      }
+    });
+    setExpenseList(updatedElementList);
+  };
 
   useEffect(() => {
     if (editId) {
@@ -60,7 +90,7 @@ const ExpenseForm = ({
   }, [editId]);
 
   return (
-    <div className={StyleSheet.formWrapper}>
+    <div className={styles.formWrapper}>
       <h3>{editId ? "Edit Expense" : "Add Expenses"}</h3>
       <form onSubmit={editId ? handleEdit : handleAdd}>
         <input
