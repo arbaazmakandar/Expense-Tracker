@@ -79,12 +79,14 @@ const ExpenseForm = ({
 
   useEffect(() => {
     if (editId) {
-      const expenseData = expenseList.find((item) => item.id === editId);
+      const currentEditedTransaction = expenseList.find(
+        (item) => item.id === editId
+      );
       setFormData({
-        title: expenseData.title,
-        category: expenseData.category,
-        price: expenseData.price,
-        date: expenseData.date,
+        title: currentEditedTransaction.title,
+        category: currentEditedTransaction.category,
+        price: currentEditedTransaction.price,
+        date: currentEditedTransaction.date,
       });
     }
   }, [editId]);
