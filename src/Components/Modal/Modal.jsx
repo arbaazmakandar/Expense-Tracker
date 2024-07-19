@@ -10,8 +10,7 @@ export default function ModalWrapper({ isOpen, setIsOpen, children }) {
 
   const customStyles = {
     content: {
-      width: "95%",
-      maxWidth: "572px",
+      maxWidth: "538px",
       top: "50%",
       left: "50%",
       transform: "translateX(-50%) translateY(-50%)",

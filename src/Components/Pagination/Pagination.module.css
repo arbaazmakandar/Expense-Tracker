@@ -1,7 +1,8 @@
 .paginationWrapper{
     display: flex;
-    gap:8px;
+    gap:10px;
     justify-content: center;
+    padding-top: 10px;
 }
 
 .paginationWrapper p{
