@@ -18,13 +18,25 @@ const ExpenseForm = ({
     date: "",
   });
   //Edit Id will be there when open from Recent Transactions, else it will not be there
-  console.log(editId);
   const { enqueueSnackbar } = useSnackbar();
 
   const handleChange = (e) => {
     const name = e.target.name;
     setFormData((prev) => ({ ...prev, [name]: e.target.value }));
   };
+  function formatDate(inputDate) {
+    // Parse the input date string
+    const [year, month, day] = inputDate.split("-");
+
+    // Create a Date object
+    const date = new Date(year, month - 1, day); // Month is 0-indexed
+
+    // Define options for toLocaleDateString
+    const options = { year: "numeric", month: "long", day: "numeric" };
+
+    // Format the date
+    return date.toLocaleDateString("en-US", options);
+  }
   const handleAdd = (e) => {
     e.preventDefault();
     if (balance < Number(formData.price)) {
@@ -38,7 +50,10 @@ const ExpenseForm = ({
       setBalance((prev) => Number(prev) - Number(formData.price));
 
       const lastId = expenseList.length > 0 ? expenseList[0].id : 0;
-      setExpenseList((prev) => [{ ...formData, id: lastId + 1 }, ...prev]);
+      setExpenseList((prev) => [
+        { ...formData, date: formatDate(formData.date), id: lastId + 1 },
+        ...prev,
+      ]);
       setFormData({
         title: "",
         category: "",
@@ -65,7 +80,6 @@ const ExpenseForm = ({
           //else (means the price entered is less than already price OR wallet balance is suffice of the price)
           //we decrease the balance and set the new price of item
           setBalance((prev) => Number(prev) + Number(difference));
-
           setIsOpen(false);
           return { ...formData, id: editId };
         }
@@ -86,7 +100,7 @@ const ExpenseForm = ({
         title: currentEditedTransaction.title,
         category: currentEditedTransaction.category,
         price: currentEditedTransaction.price,
-        date: currentEditedTransaction.date,
+        date: formatDate(currentEditedTransaction.date),
       });
     }
   }, [editId]);
