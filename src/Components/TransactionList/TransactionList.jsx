@@ -24,6 +24,7 @@ const TransactionList = ({
     setBalance((prev) => Number(prev) + Number(item.price));
     setExpenseList((prev) => prev.filter((item) => item.id !== id));
   };
+
   const handleEdit = (id) => {
     setEditId(id);
     setIsDisplayEditor(true);
@@ -74,7 +75,7 @@ const TransactionList = ({
           <p>No transactions!</p>
         </div>
       )}
-      <Modal isOpen={isDisplayEditor} setIsOpen={setIsDisplayEditor}>
+      `<Modal isOpen={isDisplayEditor} setIsOpen={setIsDisplayEditor}>
         <ExpenseForm
           setIsOpen={setIsDisplayEditor}
           expenseList={expenseList}
@@ -83,7 +84,7 @@ const TransactionList = ({
           setBalance={setBalance}
           balance={balance}
         />
-      </Modal>
+      </Modal>`
     </div>
   );
 };

@@ -81,7 +81,7 @@ const ExpenseForm = ({
           //we decrease the balance and set the new price of item
           setBalance((prev) => Number(prev) + Number(difference));
           setIsOpen(false);
-          return { ...formData, id: editId };
+          return { ...formData, date: formatDate(formData.date), id: editId };
         }
       } else {
         setIsOpen(false);
@@ -100,7 +100,7 @@ const ExpenseForm = ({
         title: currentEditedTransaction.title,
         category: currentEditedTransaction.category,
         price: currentEditedTransaction.price,
-        date: formatDate(currentEditedTransaction.date),
+        date: currentEditedTransaction.date,
       });
     }
   }, [editId]);
